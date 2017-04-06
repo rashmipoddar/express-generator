@@ -6,19 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var fs = require('fs');
-var mongoose = require('mongoose');
-
-var db = mongoose.connect('mongodb://localhost/genDb');
-var appSchema = mongoose.Schema({
-  name: String,
-  fav_book: String
-});
-
-appModel = mongoose.model('app', appSchema);
-
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var news = require('./routes/news');
+var cron = require('./routes/cron');
 
 var app = express();
 
@@ -36,13 +28,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(function(req, res, next) {
-  req.db = db;
-  next();
-});
-
 app.use('/', index);
 app.use('/users', users);
+app.use('/news', news);
+app.use('/cron', cron);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
